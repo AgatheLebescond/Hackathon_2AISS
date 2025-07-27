@@ -1,0 +1,22 @@
+[
+  {
+    "question": "quels sont les types de comportement d'achat ?",
+    "expected_keywords": ["routinier", "complexe", "impulsif", "dissonance"]
+  },
+  {
+    "question": "qu'est-ce que le comportement d'achat impulsif ?",
+    "expected_keywords": ["émotion", "soudaine", "non planifié"]
+  },
+  {
+    "question": "comment les réseaux sociaux influencent l'achat ?",
+    "expected_keywords": ["réseaux", "influence", "avis"]
+  },
+  {
+    "question": "comment fidéliser un consommateur ?",
+    "expected_keywords": ["fidélité", "récompense", "engagement"]
+  },
+  {
+    "question": "qu'est-ce que la dissonance cognitive après achat ?",
+    "expected_keywords": ["incertitude", "rassurer", "après-vente"]
+  }
+]

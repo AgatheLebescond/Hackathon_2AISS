@@ -1,0 +1,19 @@
+# Ignorer les fichiers/dossiers inutiles
+__pycache__/
+*.pyc
+*.pyo
+*.log
+*.zip
+*.pdf
+
+# Environnement virtuel
+venv/
+
+# Données générées
+data/uploads/
+data/outputs/
+
+# Cache divers
+*.DS_Store
+*.idea/
+.cache/
