@@ -78,4 +78,30 @@ if __name__ == "__main__":
         observer.stop()
     observer.join()
 
+# ingestion/processing/wordcloud_generator.py
+
+import matplotlib.pyplot as plt
+from wordcloud import WordCloud
+import os
+
+def generate_wordcloud(text: str, doc_id: str) -> str:
+    """
+    Génère un nuage de mots à partir d'un texte.
+    Enregistre l’image dans /visualisation/wordclouds/ avec nom basé sur doc_id.
+    Retourne le chemin du fichier .png
+    """
+    wordcloud = WordCloud(width=800, height=400, background_color='white').generate(text)
+
+    output_dir = "visualisation/wordclouds/"
+    os.makedirs(output_dir, exist_ok=True)
+    output_path = os.path.join(output_dir, f"{doc_id}_wordcloud.png")
+
+    plt.figure(figsize=(10, 5))
+    plt.imshow(wordcloud, interpolation='bilinear')
+    plt.axis("off")
+    plt.tight_layout()
+    plt.savefig(output_path)
+    plt.close()
+
+    return output_path
 
