@@ -1,68 +1,136 @@
-`README.md`,
-## 🎓 Contexte
+# 🧠 Moteur de Recherche, Résumé Automatique et Analyse d'Articles avec IA Générative
 
-Ce projet a été développé dans le cadre du **Hackathon 2 — Team Invader**, dans une formation avancée en **intelligence artificielle générative**.
+---
+
+## 🎓 Contexte pédagogique
+
+Ce projet a été réalisé dans le cadre du **Hackathon 2 — Team Invader**, au sein d'une formation avancée en **intelligence artificielle générative**.
 
 Il combine les technologies de **recherche sémantique**, de **résumé automatique**, d’**analyse de sentiment**, et d’**extraction d’articles web** pour fournir une application complète, 100% locale, de lecture assistée par IA.
 
 ---
 
-## 🎯 Objectifs
+## 🌟 Objectifs pédagogiques
 
-| Objectif                                                            | Compétence associée                                |
-| ------------------------------------------------------------------- | -------------------------------------------------- |
-| Extraction automatique de texte (PDF, DOCX, articles en ligne)      | Parsing multi-format / HTML / API                  |
-| Nettoyage et découpage NLP                                          | spaCy, segmentation linguistique                   |
-| Embedding vectoriel                                                 | `sentence-transformers`, MiniLM                    |
-| Recherche vectorielle                                               | FAISS, Similarité Cosine                           |
-| Résumé génératif                                                    | Modèle `DistilBART` pré-entraîné                   |
-| Question-réponse contextuelle                                       | Vectorisation + top-k context chunks               |
-| Analyse de sentiment                                                | TextBlob / Transformers (multilingual BERT)        |
-| Nuage de mots                                                       | WordCloud, Matplotlib                              |
-| Évaluation des résumés                                              | BLEU, ROUGE, Precision@3                           |
-| Interface interactive                                               | Streamlit                                          |
+| Objectif                                    | Compétence développée                    |
+| ------------------------------------------- | ---------------------------------------- |
+| Extraction de texte (PDF/DOCX/articles web) | Parsing multi-format, HTML, API          |
+| Extraction des métadonnées (date, image)    | Parsing HTML, traitement JSON NewsAPI    |
+| Nettoyage et découpage NLP                  | spaCy, segmentation linguistique         |
+| Embedding vectoriel                         | Sentence-Transformers (MiniLM)           |
+| Recherche vectorielle                       | FAISS + similarité cosine                |
+| Résumé génératif                            | DistilBART pré-entraîné                  |
+| Question-réponse contextuelle               | Vectorisation + top-k context chunks     |
+| Résumé guidé via prompt thématique          | Prompt engineering (mobilisation/climat) |
+| Analyse de sentiment                        | TextBlob / Transformers                  |
+| Nuage de mots                               | WordCloud, Matplotlib                    |
+| Évaluation automatique des résumés          | BLEU, ROUGE, Precision\@3                |
+| Interface interactive                       | Streamlit                                |
 
 ---
 
 ## ⚙️ Fonctionnalités principales
 
 - 📄 Upload de documents PDF ou DOCX
-- 🌐 URL d’article (via NewsAPI ou requête directe)
-- ❓ Questions libres en langage naturel
-- 🔎 Résultats contextuels pertinents (vector search)
-- 📝 Résumé généré automatiquement (génératif)
-- 📊 Analyse de sentiment globale
-- ☁️ Visualisation du vocabulaire dominant (nuage de mots)
-- 📥 Export (.txt, .pdf, .png)
-- 📈 Évaluation via BLEU / ROUGE
+- 🌐 Extraction automatique d’articles via URL
+- 🔗 **Connexion à NewsAPI pour télécharger le contenu complet d’un article à partir de son URL**
+- 🖼️ **Récupération automatique des métadonnées de l’article** : titre, auteur, date de publication, **URL de l’image d’en-tête**, nom du journal
+- ❓ Questions en langage naturel (question answering vectoriel)
+- 🔍 Recherche vectorielle top-k contextuelle (passages les plus pertinents)
+- 📝 Résumé généré automatiquement via modèle Transformer
+- 🧽 Résumé guidé par **prompt thématique** : climat, mobilisation citoyenne, loi Duplomb
+- 📊 Analyse de sentiment (polarité globale)
+- ☁️ Génération dynamique d’un nuage de mots à partir du texte analysé
+- 📤 Export des résultats : `.txt`, `.pdf`, `.png`
+- 📈 Évaluation automatique avec BLEU et ROUGE
 
 ---
 
-## 🧱 Pipeline IA
+## 🔁 Pipeline IA complet
 
 ```text
-1. Upload fichier / saisie URL
-2. Extraction texte brut
-3. Nettoyage + découpage
-4. Vectorisation par blocs
-5. Indexation FAISS
-6. Recherche vectorielle (top-k)
-7. Résumé généré (DistilBART)
-8. Analyse de sentiment
-9. Nuage de mots
-10. Affichage / export
-🖥️ Interface utilisateur (Streamlit)
+1. Upload d’un fichier PDF/DOCX ou saisie d’une URL
+2. Extraction du texte (pdfplumber / NewsAPI / HTML parser)
+3. Extraction des métadonnées : titre, date, image, journal (si disponible)
+4. Nettoyage et découpage (spaCy)
+5. Vectorisation sémantique (MiniLM)
+6. Indexation locale via FAISS
+7. Saisie d’une question libre → recherche contextuelle top-k
+8. Choix entre deux boutons :
+   - 📄 Résumé classique (neutre)
+   - 🌍 Résumé thématique (mobilisation citoyenne, climat, loi Duplomb)
+9. Analyse de sentiment (TextBlob ou modèle BERT multilingue)
+10. Génération d’un nuage de mots
+11. Affichage dynamique via Streamlit (texte + métadonnées + image + nuage)
+12. Export des résultats : `.txt`, `.pdf`, `.png`
+```
 
-📁 Téléversement de fichier local
-🌍 Extraction d’articles web via URL
-❓ Moteur de recherche contextuel
-📝 Résumé synthétique
-📊 Score de sentiment (positif/neutre/négatif)
-☁️ Nuage de mots dynamique
-📤 Boutons de téléchargement (résumé, log, visuel)
-📁 Arborescence du projet
+---
 
+## 🔐 Intégration de NewsAPI
 
+Le projet intègre [**NewsAPI**](https://newsapi.org/) pour extraire le contenu d’articles d’actualité directement à partir d’une URL.
+
+### ⚙️ Prérequis :
+
+Un fichier `.env.example` est fourni pour aider à la configuration locale :
+
+```env
+# .env.example
+NEWS_API_KEY=your_api_key_here
+```
+
+➡️ **À faire** :
+
+- Copier `.env.example` → `.env`
+- Remplacer `your_api_key_here` par votre vraie clé NewsAPI
+
+1. Créer un compte gratuit sur [https://newsapi.org/](https://newsapi.org/)
+2. Récupérer une clé d’API personnelle
+3. La stocker dans un fichier `.env` (ou comme variable d’environnement) :
+
+```
+NEWS_API_KEY=xxxxxxxxxxxxxxxxxxxxxxxx
+```
+
+> ⚠️ Ne jamais versionner cette clé sur GitHub
+
+La clé est ensuite chargée dans le code via :
+
+```python
+import os
+NEWS_API_KEY = os.getenv("NEWS_API_KEY")
+```
+
+Le système récupère automatiquement les **métadonnées** suivantes pour chaque article extrait :
+
+- 🕒 Date et heure de publication
+- 🖼️ Image d’en-tête (URL)
+- ✍️ Auteur, nom du **journal ou magazine** (source), si disponibles
+
+---
+
+## 🖥️ Interface utilisateur (Streamlit)
+
+- 📁 Téléversement de fichiers PDF/DOCX
+- 🌍 Collage d’une **URL d’article d’actualité** (via NewsAPI)
+- 🕒 Affichage de la **date de publication** de l’article
+- 🖼️ Affichage de l’**image d’illustration** (si présente)
+- 📰 Affichage du **nom du journal ou média**
+- ❓ Saisie d’une question libre
+- 🔍 Recherche sémantique des passages pertinents
+- 📝 Deux types de résumés générés :
+  - 📄 Résumé classique (neutre)
+  - 🌍 Résumé thématique (mobilisation citoyenne, climat, loi Duplomb)
+- 📊 Score de sentiment (positif, neutre, négatif)
+- ☁️ Nuage de mots généré dynamiquement
+- 📥 Boutons d’export : résumé (.txt), visuel (.png), log
+
+---
+
+## 📁 Arborescence du projet
+
+```
 PSTB_ai_doc_search/
 ├── automation/
 │   └── watcher.py
@@ -94,16 +162,19 @@ PSTB_ai_doc_search/
 ├── frontend.py
 ├── compress.py
 ├── requirements.txt
+├── .env.example
 └── README.md
+```
 
-✅ Résultats obtenus
-
-🔁 Traitement automatisé de documents et d’articles en ligne
-🧠 Résumé cohérent en langage naturel
-🔍 Recherche sémantique top-k
-📊 Analyse de tonalité (score + mots dominants)
-☁️ Nuage de mots cliquable
-📈 Évaluation BLEU / ROUGE intégrée
-📦 Projet packagé, prêt à être déployé en local
 ---
+
+## ✅ Résultats obtenus
+
+- 🔁 Traitement automatisé de fichiers et d’articles web
+- 🧠 Résumés générés localement en deux modes : classique ou thématique
+- 🔍 Recherche sémantique top-k des réponses contextuelles
+- 📊 Analyse de sentiment automatisée (score + label)
+- ☁️ Nuage de mots dynamique basé sur le vocabulaire dominant
+- 📈 Évaluation automatique avec BLEU et ROUGE
+- 📦 Projet packagé, prêt à être exécuté localement
 
