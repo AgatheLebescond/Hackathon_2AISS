@@ -1,7 +1,7 @@
 import faiss
 import numpy as np
 
-def create_faiss_index(embedding_dim):
+def build_faiss_index(embedding_dim):
     """
     Crée un index FAISS L2 brut (IndexFlatL2) avec la dimension donnée.
     """

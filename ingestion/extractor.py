@@ -12,7 +12,7 @@ def extract_text_from_pdf(file_path):
 def extract_text_from_docx(file_path):
     return docx2txt.process(file_path).strip()
 
-def extract_text(file_path):
+def extract_text_from_file(file_path):
     ext = Path(file_path).suffix.lower()
     if ext == ".pdf":
         return extract_text_from_pdf(file_path)

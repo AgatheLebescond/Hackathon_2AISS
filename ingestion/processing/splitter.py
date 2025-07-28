@@ -2,7 +2,7 @@ import spacy
 
 nlp = spacy.load("en_core_web_sm")
 
-def split_text_spacy(text, max_tokens=300):
+def split_text(text, max_tokens=300):
     doc = nlp(text)
     sentences = [sent.text.strip() for sent in doc.sents]
 

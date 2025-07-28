@@ -7,11 +7,11 @@ from ingestion.extractor import extract_text_from_file
 from ingestion.cleaner import clean_text
 from ingestion.processing.splitter import split_text
 from ingestion.processing.embedder import embed_chunks
-from ingestion.processing.indexer import build_faiss_index
-from ingestion.processing.summarizer import generate_summary, generate_thematic_summary
-from ingestion.processing.sentiment_analyzer import analyze_sentiment
-from ingestion.processing.wordcloud_generator import generate_wordcloud
-from ingestion.newsapi_fetcher import fetch_article_from_url
+from ingestion.processing.indexer import build_faiss_index, index_chunks
+from ingestion.processing.summarizer import generate_summary#, generate_thematic_summary
+#from ingestion.processing.sentiment_analyzer import analyze_sentiment
+#from ingestion.processing.wordcloud_generator import generate_wordcloud
+#from ingestion.newsapi_fetcher import fetch_article_from_url
 
 
 # === Configuration Streamlit
@@ -29,18 +29,20 @@ def save_uploaded_file(uploaded_file):
 
 
 def process_text_pipeline(raw_text):
-    """Pipeline NLP complet : nettoyage, split, embedding, index"""
     cleaned = clean_text(raw_text)
     chunks = split_text(cleaned)
     embeddings = embed_chunks(chunks)
-    index = build_faiss_index(embeddings)
+    embedding_dim = embeddings.shape[1] 
+    index = build_faiss_index(embedding_dim)
+    index_chunks(index, embeddings)
     return cleaned, chunks, index
+
 
 
 def display_summary_section(chunks, thematic=False, theme=None):
     """Affichage d’un résumé généré automatiquement"""
     if thematic and theme:
-        summary = generate_thematic_summary(chunks, theme=theme)
+        #summary = generate_thematic_summary(chunks, theme=theme)
         st.subheader(f"🌍 Résumé thématique : {theme}")
     else:
         summary = generate_summary(chunks)
@@ -51,14 +53,14 @@ def display_summary_section(chunks, thematic=False, theme=None):
 
 def display_analysis(summary, cleaned_text, doc_id):
     """Analyse de sentiment et nuage de mots"""
-    score, label = analyze_sentiment(summary)
+    #score, label = analyze_sentiment(summary)
     st.subheader("📊 Analyse de sentiment")
-    st.write(f"Tonalité détectée : **{label}** (score : {score:.2f})")
+    #st.write(f"Tonalité détectée : **{label}** (score : {score:.2f})")
 
-    wordcloud_path = generate_wordcloud(cleaned_text, doc_id)
-    st.subheader("☁️ Nuage de mots")
-    st.image(wordcloud_path, caption="Vocabulaire dominant")
-    return wordcloud_path
+    #wordcloud_path = generate_wordcloud(cleaned_text, doc_id)
+    #st.subheader("☁️ Nuage de mots")
+    #st.image(wordcloud_path, caption="Vocabulaire dominant")
+    #return wordcloud_path
 
 
 def display_metadata(metadata):
@@ -88,10 +90,11 @@ with tab1:
 with tab2:
     url = st.text_input("Coller l’URL d’un article d’actualité")
     if st.button("Extraire l’article depuis l’URL") and url:
-        article_data = fetch_article_from_url(url)
-        raw_text = article_data["text"]
-        metadata = article_data["metadata"]
-        doc_id = metadata.get("title", "article")
+        st.markdown("Fetcher")
+        #article_data = fetch_article_from_url(url)
+        #raw_text = article_data["text"]
+        #metadata = article_data["metadata"]
+        #doc_id = metadata.get("title", "article")
 
 # === Pipeline IA ===
 if raw_text:
@@ -113,7 +116,7 @@ if raw_text:
             summary = display_summary_section(chunks, thematic=True, theme=theme)
 
     if summary:
-        wordcloud_path = display_analysis(summary, cleaned, doc_id)
+        #wordcloud_path = display_analysis(summary, cleaned, doc_id)
 
         if metadata:
             display_metadata(metadata)
@@ -121,7 +124,6 @@ if raw_text:
         st.markdown("---")
         st.subheader("📥 Export des résultats")
         st.download_button("💾 Télécharger le résumé (.txt)", summary, file_name=f"{doc_id}_resume.txt")
-        st.download_button("💾 Télécharger le nuage de mots", open(wordcloud_path, "rb"), file_name=f"{doc_id}_cloud.png")
 else:
     st.info("Uploade un fichier ou entre une URL pour commencer.")
      
