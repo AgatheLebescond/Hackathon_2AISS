@@ -1,19 +1,31 @@
-# Ignorer les fichiers/dossiers inutiles
+# === Python junk files ===
 __pycache__/
-*.pyc
+*.py[cod]
 *.pyo
+
+# === Logs, caches, backups ===
 *.log
 *.zip
-*.pdf
+*.bak
+.DS_Store
+.cache/
+.idea/
 
-# Environnement virtuel
+# === Environnement virtuel ===
 venv/
+.env
+.env.*
 
-# Données générées
+# === Fichiers générés (résumés, nuages, PDF) ===
+*.pdf
+*.png
+
+# === Données locales ===
 data/uploads/
 data/outputs/
+visualisation/wordclouds/
+evaluation/scores/
 
-# Cache divers
-*.DS_Store
-*.idea/
-.cache/
+# === Fichiers de test ou temporaires ===
+test_*
+tmp_*
