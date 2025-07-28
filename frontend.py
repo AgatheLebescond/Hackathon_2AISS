@@ -1,107 +1,76 @@
 import os
-import sys
-import tempfile
-
 import streamlit as st
 
-# Assure les imports de modules internes
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-
-from ingestion.extractor import extract_text
+from ingestion.extractor import extract_text_from_file
 from ingestion.cleaner import clean_text
-from ingestion.processing.splitter import split_text_spacy
-from ingestion.processing.embedder import generate_embeddings
-from ingestion.processing.indexer import create_faiss_index, index_chunks, search_index
-from ingestion.processing.summarizer import summarize_text
-from sentence_transformers import SentenceTransformer
+from ingestion.processing.splitter import split_text
+from ingestion.processing.embedder import embed_chunks
+from ingestion.processing.indexer import build_faiss_index, search_top_k
+from ingestion.processing.summarizer import generate_summary
+from ingestion.processing.sentiment_analyzer import analyze_sentiment
+from ingestion.processing.wordcloud_generator import generate_wordcloud
+from ingestion.newsapi_fetcher import fetch_article_from_url
 
-from ingestion.processing.export import export_summary_txt, export_summary_pdf
+st.set_page_config(page_title="AI Résumeur", layout="wide")
 
+st.title("🧠 Résumeur intelligent d'articles & PDF")
 
-# === Initialisation globale ===
-st.set_page_config(page_title="Recherche IA + Résumé", layout="wide")
-st.title("🔎 Recherche intelligente dans vos documents")
+# --- UPLOAD FICHIER OU URL ---
+tab1, tab2 = st.tabs(["📄 Fichier PDF/DOCX", "🌍 Article en ligne"])
 
-if "doc_chunks" not in st.session_state:
-    st.session_state.doc_chunks = []
-if "faiss_index" not in st.session_state:
-    st.session_state.faiss_index = None
-if "embeddings" not in st.session_state:
-    st.session_state.embeddings = None
+with tab1:
+    uploaded_file = st.file_uploader("Téléverser un fichier", type=["pdf", "docx"])
+    if uploaded_file:
+        doc_id = os.path.splitext(uploaded_file.name)[0]
+        filepath = f"data/uploads/{uploaded_file.name}"
+        with open(filepath, "wb") as f:
+            f.write(uploaded_file.read())
+        raw_text = extract_text_from_file(filepath)
 
-model = SentenceTransformer("all-MiniLM-L6-v2")
+with tab2:
+    url = st.text_input("Coller l’URL d’un article d’actualité")
+    if st.button("Extraire l’article depuis l’URL") and url:
+        article_data = fetch_article_from_url(url)
+        raw_text = article_data["text"]
+        metadata = article_data["metadata"]
+        doc_id = metadata.get("title", "article")
 
-# === Upload de document ===
-uploaded_file = st.file_uploader("📤 Téléversez un document PDF ou DOCX", type=["pdf", "docx"])
-
-if uploaded_file:
-    with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(uploaded_file.name)[-1]) as tmp_file:
-        tmp_file.write(uploaded_file.read())
-        tmp_path = tmp_file.name
-
-    st.success("✅ Fichier chargé.")
-    st.subheader("📥 Traitement du document...")
-
-    raw_text = extract_text(tmp_path)
+# --- TRAITEMENT ---
+if 'raw_text' in locals():
     cleaned = clean_text(raw_text)
-    chunks = split_text_spacy(cleaned)
+    chunks = split_text(cleaned)
+    embeddings = embed_chunks(chunks)
+    index = build_faiss_index(embeddings)
 
-    st.session_state.doc_chunks = chunks
-    embeddings = generate_embeddings(chunks)
-    st.session_state.embeddings = embeddings
+    # Résumé automatique
+    summary = generate_summary(chunks)
+    st.markdown("### 📝 Résumé généré")
+    st.success(summary)
 
-    faiss_index = create_faiss_index(embeddings.shape[1])
-    index_chunks(faiss_index, embeddings)
-    st.session_state.faiss_index = faiss_index
+    # Analyse de sentiment
+    score, label = analyze_sentiment(summary)
+    st.markdown("### 📊 Analyse de sentiment")
+    st.write(f"**Tonalité détectée :** {label} (score : {score:.2f})")
 
-    st.success(f"✅ {len(chunks)} blocs indexés.")
-    os.remove(tmp_path)
+    # Nuage de mots
+    wordcloud_path = generate_wordcloud(cleaned, doc_id)
+    st.markdown("### ☁️ Nuage de mots")
+    st.image(wordcloud_path, caption="Vocabulaire dominant")
 
-# === Interface de recherche ===
-if st.session_state.faiss_index:
-    st.subheader("❓ Posez une question sur le document")
+    # Métadonnées
+    if 'metadata' in locals():
+        st.markdown("### ℹ️ Métadonnées de l’article")
+        st.write(f"📰 Source : **{metadata.get('source', 'N/A')}**")
+        st.write(f"🕓 Date : {metadata.get('publishedAt', 'N/A')}")
+        if metadata.get("image_url"):
+            st.image(metadata["image_url"], caption="Image d’illustration")
 
-    user_query = st.text_input("Votre question :", placeholder="Ex : Quels sont les types de comportement d’achat ?")
+    # Exports
+    st.download_button("💾 Télécharger le résumé", summary, file_name=f"{doc_id}_resume.txt")
+    st.download_button("💾 Télécharger le nuage de mots", open(wordcloud_path, "rb"), file_name=f"{doc_id}_wordcloud.png")
 
-    if user_query:
-        query_vec = model.encode([user_query], convert_to_numpy=True)
-        indices, _ = search_index(st.session_state.faiss_index, query_vec, top_k=3)
+else:
+    st.info("Uploade un fichier ou entre une URL pour commencer.")
 
-        selected_chunks = [st.session_state.doc_chunks[i] for i in indices]
 
-        st.divider()
-        st.markdown("### 🧠 Blocs les plus pertinents :")
-        for i, chunk in enumerate(selected_chunks):
-            with st.expander(f"Chunk {i+1}"):
-                st.write(chunk)
-
-        full_text = " ".join(selected_chunks)
-        summary = summarize_text(full_text)
-
-        st.markdown("### 📝 Résumé généré :")
-        st.success(summary)
-        
-        import tempfile
-from ingestion.processing.export import export_summary_txt, export_summary_pdf
-
-# === Export boutons
-if st.button("💾 Télécharger le résumé"):
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".txt") as txt_file:
-        export_summary_txt(summary, txt_file.name)
-        st.download_button("⬇️ Télécharger .txt", data=open(txt_file.name, "rb"), file_name="resume.txt")
-
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as pdf_file:
-        export_summary_pdf(summary, pdf_file.name)
-        st.download_button("⬇️ Télécharger .pdf", data=open(pdf_file.name, "rb"), file_name="resume.pdf")
-
-st.sidebar.markdown("🧾 **Logs d’indexation**")
-
-if st.sidebar.button("📖 Voir log.txt"):
-    log_path = os.path.join("data", "outputs", "log.txt")
-    if os.path.exists(log_path):
-        with open(log_path, "r", encoding="utf-8") as log_file:
-            logs = log_file.read()
-        st.sidebar.text_area("🗂 Journal des traitements :", logs, height=300)
-    else:
-        st.sidebar.warning("Aucun log détecté.")
 
