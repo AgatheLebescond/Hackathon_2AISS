@@ -10,7 +10,7 @@ Il combine les technologies de **recherche sémantique**, de **résumé automati
 
 ---
 
-## 🎯 Objectifs pédagogiques
+## 🌟 Objectifs pédagogiques
 
 | Objectif                                    | Compétence développée                    |
 | ------------------------------------------- | ---------------------------------------- |
@@ -34,11 +34,11 @@ Il combine les technologies de **recherche sémantique**, de **résumé automati
 - 📄 Upload de documents PDF ou DOCX
 - 🌐 Extraction automatique d’articles via URL
 - 🔗 **Connexion à NewsAPI pour télécharger le contenu complet d’un article à partir de son URL**
-- 🖼️ **Récupération automatique des métadonnées de l’article** : titre, auteur, date de publication, **URL de l’image d’en-tête**
+- 🖼️ **Récupération automatique des métadonnées de l’article** : titre, auteur, date de publication, **URL de l’image d’en-tête**, nom du journal
 - ❓ Questions en langage naturel (question answering vectoriel)
 - 🔍 Recherche vectorielle top-k contextuelle (passages les plus pertinents)
 - 📝 Résumé généré automatiquement via modèle Transformer
-- 🧭 Résumé guidé par **prompt thématique** : climat, mobilisation citoyenne, loi Duplomb
+- 🧽 Résumé guidé par **prompt thématique** : climat, mobilisation citoyenne, loi Duplomb
 - 📊 Analyse de sentiment (polarité globale)
 - ☁️ Génération dynamique d’un nuage de mots à partir du texte analysé
 - 📤 Export des résultats : `.txt`, `.pdf`, `.png`
@@ -51,16 +51,17 @@ Il combine les technologies de **recherche sémantique**, de **résumé automati
 ```text
 1. Upload d’un fichier PDF/DOCX ou saisie d’une URL
 2. Extraction du texte (pdfplumber / NewsAPI / HTML parser)
-3. Extraction des métadonnées : titre, date, image (si disponible)
+3. Extraction des métadonnées : titre, date, image, journal (si disponible)
 4. Nettoyage et découpage (spaCy)
 5. Vectorisation sémantique (MiniLM)
 6. Indexation locale via FAISS
 7. Saisie d’une question libre → recherche contextuelle top-k
-8. Résumé généré automatiquement (DistilBART)
-   ↳ avec prompt : "Résume en insistant sur la mobilisation citoyenne, le climat et les critiques de la loi Duplomb"
+8. Choix entre deux boutons :
+   - 📄 Résumé classique (neutre)
+   - 🌍 Résumé thématique (mobilisation citoyenne, climat, loi Duplomb)
 9. Analyse de sentiment (TextBlob ou modèle BERT multilingue)
 10. Génération d’un nuage de mots
-11. Affichage dynamique via Streamlit (texte + métadonnées + image)
+11. Affichage dynamique via Streamlit (texte + métadonnées + image + nuage)
 12. Export des résultats : `.txt`, `.pdf`, `.png`
 ```
 
@@ -103,7 +104,7 @@ NEWS_API_KEY = os.getenv("NEWS_API_KEY")
 
 Le système récupère automatiquement les **métadonnées** suivantes pour chaque article extrait :
 
-- 🕓 Date et heure de publication
+- 🕒 Date et heure de publication
 - 🖼️ Image d’en-tête (URL)
 - ✍️ Auteur, nom du **journal ou magazine** (source), si disponibles
 
@@ -113,12 +114,14 @@ Le système récupère automatiquement les **métadonnées** suivantes pour chaq
 
 - 📁 Téléversement de fichiers PDF/DOCX
 - 🌍 Collage d’une **URL d’article d’actualité** (via NewsAPI)
-- 🕓 Affichage de la **date de publication** de l’article
+- 🕒 Affichage de la **date de publication** de l’article
 - 🖼️ Affichage de l’**image d’illustration** (si présente)
 - 📰 Affichage du **nom du journal ou média**
 - ❓ Saisie d’une question libre
 - 🔍 Recherche sémantique des passages pertinents
-- 📝 Résumé automatique avec ou sans prompt thématique
+- 📝 Deux types de résumés générés :
+  - 📄 Résumé classique (neutre)
+  - 🌍 Résumé thématique (mobilisation citoyenne, climat, loi Duplomb)
 - 📊 Score de sentiment (positif, neutre, négatif)
 - ☁️ Nuage de mots généré dynamiquement
 - 📥 Boutons d’export : résumé (.txt), visuel (.png), log
@@ -151,7 +154,6 @@ PSTB_ai_doc_search/
 │   ├── evaluate.py
 │   ├── queries.json
 │   ├── bleu_rouge.py
-│   ├── references.json
 │   └── scores/
 │       ├── bleu_scores.csv
 │       ├── rouge_scores.csv
@@ -160,6 +162,7 @@ PSTB_ai_doc_search/
 ├── frontend.py
 ├── compress.py
 ├── requirements.txt
+├── .env.example
 └── README.md
 ```
 
@@ -167,16 +170,11 @@ PSTB_ai_doc_search/
 
 ## ✅ Résultats obtenus
 
-- 🔁 Traitement automatisé de documents et d’articles en ligne
-- 🧠 Résumé génératif fluide et cohérent
-- 🔍 Recherche sémantique localisée et pertinente
-- 🎯 Résumés contextualisés via prompt (mobilisation, climat, loi Duplomb)
-- 📊 Analyse de sentiment intégrée (avec score)
-- ☁️ Nuage de mots généré à partir des passages clés
-- 🕓 Affichage de la date de publication pour les articles
-- 🖼️ Image d’en-tête visible dans l’interface
-- 📤 Export des résultats en local : `.txt`, `.pdf`, `.png`
-- 📈 Évaluation automatique intégrée (BLEU / ROUGE)
-- 💻 Interface utilisable par des profils non techniques
-- 📦 Projet packagé et prêt à être diffusé
+- 🔁 Traitement automatisé de fichiers et d’articles web
+- 🧠 Résumés générés localement en deux modes : classique ou thématique
+- 🔍 Recherche sémantique top-k des réponses contextuelles
+- 📊 Analyse de sentiment automatisée (score + label)
+- ☁️ Nuage de mots dynamique basé sur le vocabulaire dominant
+- 📈 Évaluation automatique avec BLEU et ROUGE
+- 📦 Projet packagé, prêt à être exécuté localement
 
