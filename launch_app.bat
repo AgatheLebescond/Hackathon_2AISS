@@ -1,17 +1,28 @@
-@echo off
-title LANCEMENT IA DOC SEARCH
+#!/bin/bash
 
-REM === Activer l'environnement virtuel
-call .\venv\Scripts\activate
+# === Titre visuel dans le terminal
+echo "🚀 LANCEMENT IA DOC SEARCH"
 
-REM === Lancer l'interface Streamlit
-start "Streamlit" cmd /k streamlit run frontend.py
+# === Activation de l'environnement virtuel
+if [ -d "venv" ]; then
+    echo "📦 Activation de l'environnement virtuel..."
+    source venv/bin/activate
+else
+    echo "❌ Le dossier 'venv/' est introuvable. Créez-le avec : python3 -m venv venv"
+    exit 1
+fi
 
-REM === Lancer le Watcher (surveillance de fichiers)
-start "Watcher" cmd /k python automation\watcher.py
+# === Lancer Streamlit (frontend)
+echo "🖥️ Lancement de Streamlit..."
+streamlit run frontend.py &
 
-REM === Ouvrir l’interface dans le navigateur
-start http://localhost:8501
+# === Lancer le Watcher
+echo "👁️ Lancement du Watcher (fichiers)..."
+python automation/watcher.py &
 
-echo Application en cours d'exécution...
-pause
+# === Ouvrir le navigateur
+echo "🌐 Ouverture de l'interface sur http://localhost:8501"
+open http://localhost:8501
+
+# === Attendre que les deux processus se terminent (garde le terminal ouvert)
+wait
