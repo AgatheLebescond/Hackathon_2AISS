@@ -11,7 +11,7 @@ from ingestion.processing.indexer import build_faiss_index, index_chunks
 from ingestion.processing.summarizer import generate_summary#, generate_thematic_summary
 #from ingestion.processing.sentiment_analyzer import analyze_sentiment
 #from ingestion.processing.wordcloud_generator import generate_wordcloud
-#from ingestion.newsapi_fetcher import fetch_article_from_url
+from ingestion.newsapi_fetcher import fetch_article_from_url
 
 
 # === Configuration Streamlit
@@ -91,10 +91,9 @@ with tab2:
     url = st.text_input("Coller l’URL d’un article d’actualité")
     if st.button("Extraire l’article depuis l’URL") and url:
         st.markdown("Fetcher")
-        #article_data = fetch_article_from_url(url)
-        #raw_text = article_data["text"]
-        #metadata = article_data["metadata"]
-        #doc_id = metadata.get("title", "article")
+        article_data = fetch_article_from_url(url, api_token="00d1111a7e584642bf066fb39c6746b8")
+        raw_text = article_data['text']
+        doc_id = article_data['metadata']['title']
 
 # === Pipeline IA ===
 if raw_text:
