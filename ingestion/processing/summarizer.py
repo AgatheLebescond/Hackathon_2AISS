@@ -19,7 +19,7 @@ def generate_summary(text, max_input_tokens=1024):
     summary = summarizer(
         truncated_text,
         max_length=180,
-        min_length=50,
+        min_length=30,
         do_sample=False
     )
 
