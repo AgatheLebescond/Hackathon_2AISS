@@ -116,4 +116,4 @@ EMBEDDING_MODEL=text-embedding-ada-002
 
 Projet réalisé dans le cadre de l’**exercice 3 du hackathon du bootcamp IA & Data 2025**, appliqué à une veille citoyenne sur la pétition visant l’abrogation de la loi Duplomb.
 
-Auteur·e : [ton-nom ou @ton-pseudo-GitHub]
+Auteur·e : Agathe Le Bescond et Olivier de Cibeins
