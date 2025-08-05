@@ -1,9 +1,6 @@
 # PSTB_ai_doc_search – Pipeline IA pour la veille documentaire et l’analyse sémantique
 
-Ce projet a été réalisé dans le cadre de l’**exercice 3 du hackathon final du bootcamp IA & Data 2025**. Il vise à automatiser la veille citoyenne sur la pétition demandant l’abrogation de la loi Duplomb, à travers un pipeline de traitement de documents, résumé automatique, recherche sémantique et visualisation interactive.
-
-![Python](https://img.shields.io/badge/Python-3.10-blue)
-![License](https://img.shields.io/badge/License-MIT-green)
+Ce projet a été réalisé dans le cadre de l’**exercice 3 du hackathon final du bootcamp IA & Data 2025**. Il vise à automatiser la veille citoyenne sur la pétition demandant l’abrogation de la loi Duplomb, à travers un pipeline de traitement de documents, résumé automatique, recherche sémantique et notification push
 
 ---
 
@@ -13,7 +10,6 @@ Ce projet a été réalisé dans le cadre de l’**exercice 3 du hackathon final
 - 🧽 Nettoyer les textes pour NLP
 - 🧠 Résumer automatiquement les documents
 - 🔎 Rechercher de manière sémantique dans les contenus vectorisés
-- 🧪 Évaluer les résumés (ROUGE / BLEU)
 - 🖼️ Visualiser et interagir via une interface Streamlit
 
 ---
@@ -57,7 +53,7 @@ PSTB_ai_doc_search/
 ## ⚙️ Installation
 
 ```bash
-git clone https://github.com/ton-utilisateur/PSTB_ai_doc_search.git
+git clone https://github.com/agathelebescond/PSTB_ai_doc_search.git
 cd PSTB_ai_doc_search
 python3 -m venv .venv
 source .venv/bin/activate
