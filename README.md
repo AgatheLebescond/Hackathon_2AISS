@@ -4,9 +4,9 @@
 
 ## 🎓 Contexte pédagogique
 
-Ce projet a été réalisé dans le cadre du **Hackathon 2 — Team Invader**, au sein d'une formation avancée en **intelligence artificielle générative**.
+Ce projet a été réalisé dans le cadre du **Hackathon 2 — Team Invader**, au sein d'une formation bootcamp.
 
-Il combine les technologies de **recherche sémantique**, de **résumé automatique**, d’**analyse de sentiment**, et d’**extraction d’articles web** pour fournir une application complète, 100% locale, de lecture assistée par IA.
+Il combine les technologies de **recherche sémantique**, de **résumé automatique**, et d’**extraction d’articles web** pour fournir une application complète, 100% locale.
 
 ---
 
@@ -22,9 +22,7 @@ Il combine les technologies de **recherche sémantique**, de **résumé automati
 | Résumé génératif                            | DistilBART pré-entraîné                  |
 | Question-réponse contextuelle               | Vectorisation + top-k context chunks     |
 | Résumé guidé via prompt thématique          | Prompt engineering (mobilisation/climat) |
-| Analyse de sentiment                        | TextBlob / Transformers                  |
-| Nuage de mots                               | WordCloud, Matplotlib                    |
-| Évaluation automatique des résumés          | BLEU, ROUGE, Precision\@3                |
+               |
 | Interface interactive                       | Streamlit                                |
 
 ---
@@ -39,11 +37,7 @@ Il combine les technologies de **recherche sémantique**, de **résumé automati
 - 🔍 Recherche vectorielle top-k contextuelle (passages les plus pertinents)
 - 📝 Résumé généré automatiquement via modèle Transformer
 - 🧽 Résumé guidé par **prompt thématique** : climat, mobilisation citoyenne, loi Duplomb
-- 📊 Analyse de sentiment (polarité globale)
-- ☁️ Génération dynamique d’un nuage de mots à partir du texte analysé
 - 📤 Export des résultats : `.txt`, `.pdf`, `.png`
-- 📈 Évaluation automatique avec BLEU et ROUGE
-
 ---
 
 ## 🔁 Pipeline IA complet
@@ -59,10 +53,8 @@ Il combine les technologies de **recherche sémantique**, de **résumé automati
 8. Choix entre deux boutons :
    - 📄 Résumé classique (neutre)
    - 🌍 Résumé thématique (mobilisation citoyenne, climat, loi Duplomb)
-9. Analyse de sentiment (TextBlob ou modèle BERT multilingue)
-10. Génération d’un nuage de mots
-11. Affichage dynamique via Streamlit (texte + métadonnées + image + nuage)
-12. Export des résultats : `.txt`, `.pdf`, `.png`
+9. Affichage dynamique via Streamlit (texte + métadonnées + image + nuage)
+10. Export des résultats : `.txt`, `.pdf`, `.png`
 ```
 
 ---
@@ -122,8 +114,6 @@ Le système récupère automatiquement les **métadonnées** suivantes pour chaq
 - 📝 Deux types de résumés générés :
   - 📄 Résumé classique (neutre)
   - 🌍 Résumé thématique (mobilisation citoyenne, climat, loi Duplomb)
-- 📊 Score de sentiment (positif, neutre, négatif)
-- ☁️ Nuage de mots généré dynamiquement
 - 📥 Boutons d’export : résumé (.txt), visuel (.png), log
 
 ---
@@ -150,13 +140,6 @@ PSTB_ai_doc_search/
 │       ├── query_article.py
 │       ├── sentiment_analyzer.py
 │       └── wordcloud_generator.py
-├── evaluation/
-│   ├── evaluate.py
-│   ├── queries.json
-│   ├── bleu_rouge.py
-│   └── scores/
-│       ├── bleu_scores.csv
-│       ├── rouge_scores.csv
 ├── visualisation/
 │   └── wordclouds/
 ├── frontend.py
@@ -173,8 +156,5 @@ PSTB_ai_doc_search/
 - 🔁 Traitement automatisé de fichiers et d’articles web
 - 🧠 Résumés générés localement en deux modes : classique ou thématique
 - 🔍 Recherche sémantique top-k des réponses contextuelles
-- 📊 Analyse de sentiment automatisée (score + label)
-- ☁️ Nuage de mots dynamique basé sur le vocabulaire dominant
-- 📈 Évaluation automatique avec BLEU et ROUGE
 - 📦 Projet packagé, prêt à être exécuté localement
 
