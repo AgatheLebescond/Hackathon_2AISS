@@ -85,7 +85,6 @@ NEWS_API_KEY=your_api_key_here
 NEWS_API_KEY=xxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
-> ⚠️ Ne jamais versionner cette clé sur GitHub
 
 La clé est ensuite chargée dans le code via :
 
