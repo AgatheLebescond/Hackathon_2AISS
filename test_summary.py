@@ -24,7 +24,7 @@ index = create_faiss_index(embeddings.shape[1])
 index_chunks(index, embeddings)
 
 # Embedding de requête
-query = "quels sont les types de comportement d'achat ?"
+query = "loi duplomb " "climat" "agriculture"
 model = SentenceTransformer("all-MiniLM-L6-v2")
 query_vector = model.encode([query], convert_to_numpy=True)
 
