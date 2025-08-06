@@ -235,21 +235,21 @@ def display_metadata(metadata):
     ...
 #Affiche les informations associées à un article (source, date, image), si disponibles.
 
-9. Interface principale – Onglets
+9. Interface principale Onglets
 tab1, tab2, tab3 = st.tabs(["📄 Fichier PDF/DOCX", "🌍 Article en ligne", "🧾 Résultats"])
 #Organisation de l’interface en 3 onglets :
 tab1 : upload de fichiers,
 tab2 : extraction depuis une URL,
 tab3 : résumé et diagnostic.
 
-10. Onglet 1 – Upload de fichier
+10. Onglet 1  Upload de fichier
 with tab1:
     ...
 #L’utilisateur téléverse un fichier local,
 #Le texte est extrait, puis traité avec le pipeline complet,
 #Si la case est cochée (auto_summarize), le résumé est généré automatiquement.
 
-11. Onglet 2 – Extraction d’article via URL
+11. Onglet 2  Extraction d’article via URL
 with tab2:
     ...
 #L’utilisateur colle une URL d’article,
@@ -257,7 +257,7 @@ with tab2:
 #Stockage des résultats et affichage du résumé,
 #Option de choisir un thème de résumé.
 
-12. Onglet 3 – Résultats
+12. Onglet 3  Résultats
 with tab3:
     ...
 #Affichage du résumé généré (si disponible),
