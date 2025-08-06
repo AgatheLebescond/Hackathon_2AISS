@@ -167,3 +167,111 @@ with tab3:
 # Message d’accueil si rien encore
 if not (st.session_state.raw_text or st.session_state.chunks or st.session_state.summary):
     st.info("Téléverse un fichier ou entre une URL pour commencer.")
+
+# Commentaires du code
+
+## 1. Imports
+
+```python
+import os
+import streamlit as st
+os : pour manipuler les chemins de fichiers.
+streamlit : bibliothèque pour créer une application web interactive avec Python.
+from ingestion.extractor import extract_text_from_file
+#Fonction personnalisée pour extraire le texte d’un fichier (PDF ou DOCX).
+from ingestion.cleaner import clean_text
+#Fonction de nettoyage : supprime les caractères inutiles, normalise le texte.
+from ingestion.processing.splitter import split_text
+#Découpe le texte long en morceaux plus petits (chunks) pour traitement vectoriel.
+from ingestion.processing.embedder import embed_chunks
+#Génère des représentations vectorielles (embeddings) à partir des chunks.
+from ingestion.processing.indexer import build_faiss_index, index_chunks
+#Crée un index FAISS (recherche sémantique rapide) et y insère les vecteurs.
+from ingestion.processing.summarizer import generate_summary
+#Fonction qui utilise un modèle de langage pour résumer automatiquement le texte.
+from ingestion.newsapi_fetcher import fetch_article_from_url
+#Fonction qui récupère le contenu d’un article en ligne via une API.
+
+2. Configuration de la page Streamlit
+st.set_page_config(page_title="AI Résumeur", layout="wide")
+#Définit le titre et le layout élargi pour l’interface.
+st.title("🧠 Résumeur intelligent d'articles & PDF")
+#Affiche le titre principal dans l’interface.
+
+3. Initialisation du session_state
+defaults = { ... }
+for k, v in defaults.items():
+    if k not in st.session_state:
+        st.session_state[k] = v
+#Ce bloc initialise des variables persistantes pour mémoriser les étapes entre les actions utilisateur :
+texte brut, texte nettoyé, résumé, chunks, index, etc.
+
+4. Sauvegarde du fichier uploadé
+def save_uploaded_file(uploaded_file):
+    ...
+#Enregistre localement les fichiers uploadés dans un dossier data/uploads/.
+
+5. Pipeline de traitement texte
+def process_text_pipeline(raw_text):
+    ...
+#Nettoie le texte,
+#Découpe en chunks,
+#Génère les embeddings,
+#Crée et alimente un index FAISS.
+
+6. Stockage des résultats dans la session
+def run_pipeline_and_store(text, doc_id=None, metadata=None):
+    ...
+#Stocke tous les résultats intermédiaires dans st.session_state pour être utilisés dans les onglets suivants.
+
+7. Génération du résumé
+def display_summary_section(chunks, thematic=False, theme=None):
+    ...
+#Affiche un résumé automatique (thématique ou non),
+#Utilise la fonction generate_summary() pour créer un résumé textuel à partir des chunks.
+
+8. Affichage des métadonnées
+def display_metadata(metadata):
+    ...
+#Affiche les informations associées à un article (source, date, image), si disponibles.
+
+9. Interface principale – Onglets
+tab1, tab2, tab3 = st.tabs(["📄 Fichier PDF/DOCX", "🌍 Article en ligne", "🧾 Résultats"])
+#Organisation de l’interface en 3 onglets :
+tab1 : upload de fichiers,
+tab2 : extraction depuis une URL,
+tab3 : résumé et diagnostic.
+
+10. Onglet 1 – Upload de fichier
+with tab1:
+    ...
+#L’utilisateur téléverse un fichier local,
+#Le texte est extrait, puis traité avec le pipeline complet,
+#Si la case est cochée (auto_summarize), le résumé est généré automatiquement.
+
+11. Onglet 2 – Extraction d’article via URL
+with tab2:
+    ...
+#L’utilisateur colle une URL d’article,
+#Le texte est extrait via NewsAPI,
+#Stockage des résultats et affichage du résumé,
+#Option de choisir un thème de résumé.
+
+12. Onglet 3 – Résultats
+with tab3:
+    ...
+#Affichage du résumé généré (si disponible),
+#Téléchargement du résumé (.txt),
+#Affichage des métadonnées,
+#Affichage de diagnostics techniques :
+#nombre de mots,
+#nombre de chunks,
+#vérification FAISS,
+#aperçu du premier chunk.
+
+13. Message d’accueil
+if not (st.session_state.raw_text or st.session_state.chunks or st.session_state.summary):
+    st.info("Téléverse un fichier ou entre une URL pour commencer.")
+#Message affiché si l’application n’a encore reçu aucun contenu.
+
+---------
