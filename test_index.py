@@ -28,7 +28,7 @@ print(f"✅ Index FAISS créé avec {len(chunks)} chunks.")
 
 # === Simulation d'une requête ===
 model = SentenceTransformer("all-MiniLM-L6-v2")
-query = "quels sont les types de comportement d'achat ?"
+query = " loi Duplomb " "climat" 
 query_vector = model.encode([query], convert_to_numpy=True)
 
 # === Recherche FAISS ===
